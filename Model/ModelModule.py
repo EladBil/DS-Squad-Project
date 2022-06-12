@@ -1,7 +1,7 @@
 
 from sklearn.linear_model import LogisticRegression
 from sklearn.ensemble import RandomForestClassifier, GradientBoostingClassifier, ExtraTreesClassifier, VotingClassifier
-from sklearn.svm import SVC
+# from sklearn.svm import SVC
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.neighbors import KNeighborsClassifier
 
@@ -21,7 +21,7 @@ class DSWorkshopModel:
         ## Models Parameters ## 
 
         # Logisitic Regression Parameters:
-        self.logisitic_regression_iter_num = 100
+        # self.logisitic_regression_iter_num = 100
 
         # Voting Model Parameters:
         # Preparing a list of estimators for Voting Classifier. 
@@ -34,23 +34,19 @@ class DSWorkshopModel:
 
         ## Classifiers Initialization ##
         self.classifiers_list = [
-            LogisticRegression(max_iter=10),
             RandomForestClassifier(),
             ExtraTreesClassifier(),
-            GradientBoostingClassifier(),
+            # GradientBoostingClassifier(),
             VotingClassifier(estimators=self.voting_model_estimators),
-            SVC()
         ]
 
         # Labels of classifiers.
         # MUST BE IN CORRECT ORDER TO LIST INITIALIZATION #
         self.labels = [
-            "LR",
             "RandomForest",
             "ExtraTrees",
-            "GradientBoosting",
+            # "GradientBoosting",
             "Votingr",
-            "SVC"
         ]
 
         # Flag if the model is ready for action.
@@ -97,7 +93,7 @@ class DSWorkshopModel:
     
 
     # A method to test the model.
-    # MUST CALL AFTER YOU DID 
+    # MUST CALL AFTER YOU TRAINED!
     def test(self):
         if not self.is_ready:
             print("Something went wrong! The model isn't ready for testing")
@@ -125,7 +121,7 @@ class DSWorkshopModel:
             recall_score.append(metrics.recall_score(self.test_data_values, model_prediction))
             f1_score.append( metrics.f1_score(self.test_data_values, model_prediction))
             accuracy_score.append(metrics.accuracy_score(self.test_data_values, model_prediction))
-            self.test_data_values.append(f'{self.labels[i-1]}')
+            names.append(self.labels[i-1])
             # oversampling.append(f'{over}')
 
         results_dataFrame = {
