@@ -57,10 +57,14 @@ class DSWorkshopModel:
         #     ('knc',KNeighborsClassifier())
         # ]
 
+        # Number of processes given to computations:
+        NUMBER_OF_JOBS = 2
+        NUMBER_OF_TREES_IN_FOREST = 150 # The default of the classifier isאני  100
+
         ## Classifiers Initialization ##
         self.classifiers_list = [
-            RandomForestClassifier(),
-            ExtraTreesClassifier(),
+            RandomForestClassifier(n_jobs=NUMBER_OF_JOBS),
+            ExtraTreesClassifier(n_jobs=NUMBER_OF_JOBS),
             XGBClassifier(objective="binary:logistic")
             # GradientBoostingClassifier(),
             # VotingClassifier(estimators=self.voting_model_estimators),
