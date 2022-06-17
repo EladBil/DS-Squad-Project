@@ -1,17 +1,42 @@
 
-from sklearn.linear_model import LogisticRegression
-from sklearn.ensemble import RandomForestClassifier, GradientBoostingClassifier, ExtraTreesClassifier, VotingClassifier
-# from sklearn.svm import SVC
+from sklearn.ensemble import RandomForestClassifier, ExtraTreesClassifier
 from sklearn.tree import DecisionTreeClassifier
-from sklearn.neighbors import KNeighborsClassifier
+from sympy import N
+from xgboost import XGBClassifier
 
-from sklearn import metrics
+from sklearn.metrics import balanced_accuracy_score, recall_score, precision_score, f1_score
 
 import pandas as pd
 
 import time
 
 
+
+
+"""
+Evaluation Metrics Used:
+    1. Balanced Accuarcy Score:
+        The balanced accuracy in binary and multiclass classification problems to deal with imbalanced datasets.
+        It is defined as the average of recall obtained on each class.
+        The best value is 1 and the worst value is 0.
+
+    2. Recall:
+        The recall is the ratio tp / (tp + fn) where tp is the number of true positives and fn the number of false
+        negatives.
+        The recall is intuitively the ability of the classifier to find all the positive samples.
+        The best value is 1 and the worst value is 0.
+
+    3. Precision:
+        The precision is the ratio tp / (tp + fp) where tp is the number of true positives and fp the number of
+        false positives.
+        The precision is intuitively the ability of the classifier not to label as positive
+        a sample that is negative.
+
+    4. F1 Score:
+        The F1 score can be interpreted as a harmonic mean of the precision and recall, 
+        where an F1 score reaches its best value at 1 and worst score at 0. The relative contribution of precision and
+        recall to the F1 score are equal.
+"""
 
 class DSWorkshopModel:
     def __init__(self, data) -> None:
@@ -25,19 +50,20 @@ class DSWorkshopModel:
 
         # Voting Model Parameters:
         # Preparing a list of estimators for Voting Classifier. 
-        self.voting_model_estimators = [
-            ('lr',LogisticRegression()),
-            ('dtc',DecisionTreeClassifier()),    
-            ('rfc',RandomForestClassifier()),
-            ('knc',KNeighborsClassifier())
-        ]
+        # self.voting_model_estimators = [
+        #     ('lr',LogisticRegression()),
+        #     ('dtc',DecisionTreeClassifier()),    
+        #     ('rfc',RandomForestClassifier()),
+        #     ('knc',KNeighborsClassifier())
+        # ]
 
         ## Classifiers Initialization ##
         self.classifiers_list = [
             RandomForestClassifier(),
             ExtraTreesClassifier(),
+            XGBClassifier(objective="binary:logistic")
             # GradientBoostingClassifier(),
-            VotingClassifier(estimators=self.voting_model_estimators),
+            # VotingClassifier(estimators=self.voting_model_estimators),
         ]
 
         # Labels of classifiers.
@@ -45,8 +71,7 @@ class DSWorkshopModel:
         self.labels = [
             "RandomForest",
             "ExtraTrees",
-            # "GradientBoosting",
-            "Votingr",
+            "XGBClassifier",
         ]
 
         # Flag if the model is ready for action.
@@ -54,6 +79,29 @@ class DSWorkshopModel:
 
         # Array to save the fit running times of the model.
         self.train_running_times = []
+
+
+    def detaild_accuarcy_metric(self, true_values, pred_values):
+        
+        NEGATIVE_CLASS = 0
+        POSITIVE_CLASS = 1
+
+        # Array to split the data into classes and count each successful prediction of class.
+        pred_succ_split = [0,0] 
+        # Array to split the data into classes and count each instance of class.
+        class_split = [0, 0]
+
+        for index, value in enumerate(true_values):
+            class_split[value] = class_split[value] + 1
+            # In case the prediction is correct, add a point to the correct counter of the class.
+            if pred_values[index] == value:
+                pred_succ_split[value] = pred_succ_split[value] + 1
+        
+
+        positive_succ = round(pred_succ_split[POSITIVE_CLASS] / class_split[POSITIVE_CLASS], 5)
+        negative_succ = round(pred_succ_split[NEGATIVE_CLASS] / class_split[NEGATIVE_CLASS], 5)
+        print("Accuarcy of positive predictions: ", positive_succ)
+        print("Accuarcy of negative predictions: ", negative_succ)
 
 
 
@@ -100,10 +148,12 @@ class DSWorkshopModel:
             return
 
         # Arrays to keep evaluations form the metrics we use.
-        precision_score = []
-        recall_score = []
-        f1_score = []
-        accuracy_score = []
+        arr_precision_score = []
+        arr_recall_score = []
+        arr_f1_score = []
+        arr_balanced_accuracy_score = []
+        arr_positive_accuracy = []
+        arr_negative_accuracy = []
         predictions = []
         names = []
 
@@ -116,25 +166,37 @@ class DSWorkshopModel:
 
             model_prediction = classifier.predict(self.test_data)
             predictions.append(model_prediction)
+
+            arr_precision_score.append(precision_score(self.test_data_values, model_prediction))
             
-            precision_score.append(metrics.precision_score(self.test_data_values, model_prediction))
-            recall_score.append(metrics.recall_score(self.test_data_values, model_prediction))
-            f1_score.append( metrics.f1_score(self.test_data_values, model_prediction))
-            accuracy_score.append(metrics.accuracy_score(self.test_data_values, model_prediction))
+            arr_recall_score.append(recall_score(self.test_data_values, model_prediction))
+            
+            arr_f1_score.append(f1_score(self.test_data_values, model_prediction))
+            
+            arr_balanced_accuracy_score.append(balanced_accuracy_score(self.test_data_values, model_prediction))
+            
+            pos_score, neg_score = self.detaild_accuarcy_metric(self.test_data_values, model_prediction)
+            arr_positive_accuracy.append(pos_score)
+            arr_negative_accuracy.append(neg_score)
+            
             names.append(self.labels[i-1])
-            # oversampling.append(f'{over}')
+
 
         results_dataFrame = {
-            'precision_score': precision_score, 
-            'recall_score': recall_score, 
-            'f1_score': f1_score,
-            'accuracy_score' : accuracy_score,
-            # 'oversampling': oversampling,
-            'time ': self.train_running_times
+            'Precision Score': arr_precision_score,
+            'Recall Score': arr_recall_score, 
+            'F1 Score': arr_f1_score,
+            'Balanced Accuracy Score' : arr_balanced_accuracy_score,
+            'Positive Accuarcy Score' : arr_positive_accuracy,
+            'Negative Accuarcy Score': arr_negative_accuracy,
+            'Time Needed for Training' : self.train_running_times
         }
+
 
         results_dataFrame = pd.DataFrame(data=results_dataFrame)
         results_dataFrame.insert(loc=0, column='Method', value=names)
+
+        print(predictions)
 
         return predictions, results_dataFrame
 
