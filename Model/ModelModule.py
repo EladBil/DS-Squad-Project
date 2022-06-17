@@ -100,9 +100,10 @@ class DSWorkshopModel:
 
         positive_succ = round(pred_succ_split[POSITIVE_CLASS] / class_split[POSITIVE_CLASS], 5)
         negative_succ = round(pred_succ_split[NEGATIVE_CLASS] / class_split[NEGATIVE_CLASS], 5)
-        print("Accuarcy of positive predictions: ", positive_succ)
-        print("Accuarcy of negative predictions: ", negative_succ)
+        # print("Accuarcy of positive predictions: ", positive_succ)
+        # print("Accuarcy of negative predictions: ", negative_succ)
 
+        return positive_succ, negative_succ
 
 
     # A method for setting up the split of the data.
@@ -158,7 +159,6 @@ class DSWorkshopModel:
         names = []
 
         # Prediction loop
-
         i = 0
         for classifier in self.classifiers_list:
 
@@ -182,6 +182,7 @@ class DSWorkshopModel:
             names.append(self.labels[i-1])
 
 
+        # DataFrame table titles.
         results_dataFrame = {
             'Precision Score': arr_precision_score,
             'Recall Score': arr_recall_score, 
@@ -195,8 +196,6 @@ class DSWorkshopModel:
 
         results_dataFrame = pd.DataFrame(data=results_dataFrame)
         results_dataFrame.insert(loc=0, column='Method', value=names)
-
-        print(predictions)
 
         return predictions, results_dataFrame
 
