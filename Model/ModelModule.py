@@ -125,6 +125,9 @@ class DSWorkshopModel:
         self.train_running_times = []
 
 
+    def get_models(self):
+        return self.classifiers_list
+
     """
     A custom accuarcy metric that return the number of successes in predictions for negatives and positives.
     The best value is 1 and the worst value is 0.
@@ -187,7 +190,7 @@ class DSWorkshopModel:
 
             self.train_running_times.append(f'{round(end_time-start_time,2)}s')
 
-    
+
 
     # A method to test the model.
     # MUST CALL AFTER YOU TRAINED!
