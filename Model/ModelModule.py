@@ -4,7 +4,7 @@ from sklearn.tree import DecisionTreeClassifier
 from sympy import N
 from xgboost import XGBClassifier
 
-from sklearn.metrics import balanced_accuracy_score, recall_score, precision_score, f1_score
+from sklearn.metrics import balanced_accuracy_score, log_loss, recall_score, precision_score, f1_score
 
 import pandas as pd
 
