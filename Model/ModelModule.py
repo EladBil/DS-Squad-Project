@@ -1,7 +1,9 @@
 
 from sklearn.ensemble import RandomForestClassifier, ExtraTreesClassifier
 from sklearn.tree import DecisionTreeClassifier
+# from xgboost import XGBClassifier
 from xgboost import XGBClassifier
+
 
 from sklearn.metrics import balanced_accuracy_score, log_loss, recall_score, precision_score, f1_score, accuracy_score
 
@@ -79,7 +81,7 @@ Evaluation Metrics Used:
 """
 
 class DSWorkshopModel:
-    def __init__(self, data) -> None:
+    def __init__(self, data, number_of_trees=100) -> None:
         # Saving the original data
         self.og_data = data
 
@@ -98,14 +100,14 @@ class DSWorkshopModel:
         # ]
 
         # Number of processes given to computations:
-        NUMBER_OF_JOBS = 2
-        NUMBER_OF_TREES_IN_FOREST = 150 # The default of the classifier isאני  100
+        NUMBER_OF_JOBS = 3
+        self.number_of_trees = number_of_trees # The default of the classifier is 100
 
         ## Classifiers Initialization ##
         self.classifiers_list = [
-            RandomForestClassifier(n_jobs=NUMBER_OF_JOBS),
-            ExtraTreesClassifier(n_jobs=NUMBER_OF_JOBS),
-            XGBClassifier(objective="binary:logistic")
+            RandomForestClassifier(n_jobs=NUMBER_OF_JOBS, n_estimators=self.number_of_trees),
+            ExtraTreesClassifier(n_jobs=NUMBER_OF_JOBS, n_estimators=self.number_of_trees),
+            XGBClassifier(objective="binary:logistic", n_estimators=self.number_of_trees)
             # GradientBoostingClassifier(),
             # VotingClassifier(estimators=self.voting_model_estimators),
         ]
@@ -127,6 +129,7 @@ class DSWorkshopModel:
 
     def get_models(self):
         return self.classifiers_list
+
 
     """
     A custom accuarcy metric that return the number of successes in predictions for negatives and positives.
