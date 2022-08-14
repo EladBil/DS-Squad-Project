@@ -1,5 +1,7 @@
 import pandas as pd
 
+categorial_features = ["hospital_id", "ethnicity", "gender", "icu_admit_source",
+                       "apache_3j_bodysystem", "apache_2_bodysystem", "icu_stay_type", "icu_type"]
 
 def getBasicDataset(): #return dataset without empty column, shuffled and with onehot encoding
     first_dest_file_path = "dataset/dataset_part1.csv"
