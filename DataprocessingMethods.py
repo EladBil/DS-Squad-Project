@@ -9,7 +9,7 @@ def getBasicDataset(): #return dataset without empty column, shuffled and with o
     df = pd.concat([df1, df2])
     df.drop(df.columns[[0,1,83]], axis=1, inplace=True) #delete feature 83 which is empty column
     df = df.sample(frac=1) #shuffle
-    df = pd.get_dummies(complete_data,columns=categorial_features) #one hot encoding for categories
+    df = pd.get_dummies(df,columns=categorial_features) #one hot encoding for categories
     return df
 
 # Filling missing NUMERICAL values with mean
