@@ -107,7 +107,7 @@ class DSWorkshopModel:
         self.classifiers_list = [
             # RandomForestClassifier(n_jobs=NUMBER_OF_JOBS, n_estimators=self.number_of_trees),
             # ExtraTreesClassifier(n_jobs=NUMBER_OF_JOBS, n_estimators=self.number_of_trees),
-            XGBClassifier(objective="binary:logistic", n_estimators=self.number_of_trees, eval_metric="aucpr", scale_pos_weight="6")
+            XGBClassifier(objective="binary:logistic", n_estimators=self.number_of_trees)
             # GradientBoostingClassifier(),
             # VotingClassifier(estimators=self.voting_model_estimators),
         ]
@@ -116,7 +116,7 @@ class DSWorkshopModel:
         # MUST BE IN CORRECT ORDER TO LIST INITIALIZATION #
         self.labels = [
             # "RandomForest",
-            "ExtraTrees",
+            # "ExtraTrees",
             "XGBClassifier",
         ]
 

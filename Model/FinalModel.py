@@ -80,7 +80,7 @@ Evaluation Metrics Used:
     https://scikit-learn.org/stable/modules/model_evaluation.html
 """
 
-class DSWorkshopModel:
+class FinalModel:
     def __init__(self, data, number_of_trees=100) -> None:
         # Saving the original data
         self.og_data = data
