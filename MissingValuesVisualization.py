@@ -1,5 +1,7 @@
 # Quantity of missing values for each type of features: binary, numerical and categorical
 import matplotlib.pylab as plt
+import numpy as np
+
 categorial_features = ["hospital_id", "ethnicity", "gender", "icu_admit_source",
                        "apache_3j_bodysystem", "apache_2_bodysystem", "icu_stay_type", "icu_type"]
 
