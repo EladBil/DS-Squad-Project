@@ -116,7 +116,7 @@ class DSWorkshopModel:
         # MUST BE IN CORRECT ORDER TO LIST INITIALIZATION #
         self.labels = [
             # "RandomForest",
-            "ExtraTrees",
+            # "ExtraTrees",
             "XGBClassifier",
         ]
 
