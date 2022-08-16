@@ -76,30 +76,3 @@ def fill_missing_values_binary(df):
     for f in binary_features:
         df[f] = df[f].fillna(0)
     return df
-
-
-def selectSampleForSHAP(y_true, y_pred):
-    y_true.to_numpy()
-    false_pos = []
-    true_pos = []
-    false_neg = []
-    true_neg = []
-    for i in range(len(y_true)):
-        print(y_pred[i].type())
-        if y_pred[i] == 0 and y_true[i] == 0:
-            true_neg.append(i)
-            if y_pred[i]==0 and y_true[i] ==1 :
-                false_neg.append(i)
-            if y_pred[i]==1 and y_true[i] ==1 :
-                true_pos.append(i)
-            if y_pred[i]== 1 and y_true[i] ==0 :
-                true_pos.append(i)
-
-    for x in range(len(false_pos)):
-        print(false_pos[x])
-    for x in range(len(false_pos)):
-        print(true_pos[x])
-    for x in range(len(false_pos)):
-        print(false_neg[x])
-    for x in range(len(false_pos)):
-        print(true_neg[x])
