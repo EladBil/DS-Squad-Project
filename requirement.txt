@@ -1,3 +1,9 @@
+Imbalanced Learn Lib:
 from imblearn.over_sampling import RandomOverSampler : pip install -U imbalanced-learn 
                                                        or
                                                        pip conda install -c conda-forge imbalanced-learn
+                                                       
+Install XGBoost:
+pip install xgboost
+or
+conda install -c conda-forge py-xgboost
